@@ -1,0 +1,43 @@
+{
+  "skill_name": "eda-chip-circuit-design-skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请用 TPS62130A QFN-16 做 9–17 V 输入、3.3 V/2 A 连续、3 A 峰值的降压电源。给出每个引脚功能、原厂典型电路、目标连接表、反馈分压、L/C 选型、BOM、热和布局检查。",
+      "expected_output": "核对 TPS62130A 与 TPS62130 差异和 QFN 引脚表；引用 TI 官方资料；将公式初算与表 9-2 稳定性组合分开；核对有效电容与电感峰值电流；给出完整连接与未验证项目。",
+      "files": [],
+      "assertions": [
+        "Contains full MPN/package and official datasheet revision or page citations",
+        "Distinguishes factory typical circuit from target design",
+        "Checks selected L/C against the device-specific stable combinations",
+        "Includes every pin number or explicitly groups all duplicated pins",
+        "Includes quantitative electrical and thermal verification plan"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "MP1584 这个芯片的 VIN、SW、BST、FB、EN 怎么接？帮我做 24 V 输入到 5 V/2 A 的板子，要求电感和电容给具体料号。",
+      "expected_output": "先核对制造商、完整 MP1584 子型号、封装和 24 V 极限/推荐范围；不给没有证据的引脚编号和 BOM；在关键条件确认后再输出计算、选型及网络。",
+      "files": [],
+      "assertions": [
+        "Identifies exact ordering code/package uncertainty if present",
+        "Separates absolute maximum from recommended operating voltage",
+        "Does not invent specific passive MPNs or pin numbers",
+        "Requests only critical missing information while progressing with verified facts"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "用 SN74LVC1T45 把 1.8 V MCU 的单向 20 MHz 信号送到 3.3 V 外设，给引脚、电源去耦、方向脚和输入未上电时的处理方案。",
+      "expected_output": "按确切封装核对两侧电源和 DIR 引脚及真值表，识别此器件没有独立 OE 引脚；核对上电顺序、Ioff/掉电容忍度、供电去耦和传播延迟；无须套用 DC-DC 电感公式。",
+      "files": [],
+      "assertions": [
+        "Uses a manufacturer pin table and logic truth table for the exact package",
+        "Recognizes that this device has no separate OE pin",
+        "Checks 1.8 V and 3.3 V recommended voltage ranges and power sequencing",
+        "Includes decoupling and input/output drive/timing checks",
+        "Does not add irrelevant power-converter passives"
+      ]
+    }
+  ]
+}
