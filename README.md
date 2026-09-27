@@ -4,7 +4,12 @@ Reusable Codex skills for electronic design automation workflows.
 
 ## Included skill
 
-- [`eda-chip-circuit-design-skill`](skills/eda-chip-circuit-design-skill/): verifies manufacturer data, explains IC pins, derives typical and target circuits, selects passive components, and produces BOM, netlist, and design review notes.
+- [`eda-chip-circuit-design-skill`](skills/eda-chip-circuit-design-skill/): verifies manufacturer data, explains IC pins, derives typical and target circuits, selects passive components, and produces BOM, netlist, PCB placement/trace guidance, controlled-impedance decisions, and design review notes.
+
+## Example
+
+- [TPS54331DR 12 V → 5 V / 3 A: schematic, PCB layout guide, calculations, and validation notes](examples/tps54331dr-12v-to-5v-3a/design.md).
+- [Standalone combined schematic and PCB guide](examples/tps54331dr-12v-to-5v-3a/tps54331dr_12v_to_5v_3a_circuit_pcb_review.html).
 
 ## Use in Codex
 

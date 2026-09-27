@@ -38,6 +38,31 @@
         "Includes decoupling and input/output drive/timing checks",
         "Does not add irrelevant power-converter passives"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "TPS54331DR SOIC-8，12 V 输入、5 V/3 A。请在电路设计后给 PCB 顶层布局示意，说明 CIN、D1、L1、COUT、反馈分压、COMP/SS、GND 过孔和 VIN/VOUT/PH 走线；并判断是否需要 50 Ω 阻抗。假定 2 层板、外层 1 oz 铜，层叠和板厂规则尚未确定。",
+      "expected_output": "引用 TI TPS54331 8.4 布局指南和图 8-16；画出短小输入脉冲回路、紧凑 PH 铜、连续地平面、安静 FB Kelvin 取样、GND 热过孔；以 1 oz 和温升为条件给电源线宽起点；说明本 Buck 无 50 Ω 单端/差分阻抗目标，并列出仍待确认的板厂、热和 EMI 验证。",
+      "files": [],
+      "assertions": [
+        "Distinguishes schematic net connectivity from a non-manufacturing placement illustration",
+        "Minimizes CIN-U1-D1 high-di/dt loop and PH copper area",
+        "Keeps FB/COMP/SS away from PH and explains GND return and thermal vias",
+        "Does not assign 50 ohm controlled impedance to power and feedback nets",
+        "Conditions trace width and via advice on copper thickness, temperature rise, stackup and fab rules"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "有一颗 USB 2.0 接口芯片，要布 D+/D- 差分对。已知芯片手册要求 90 Ω 差分，但尚未确定四层板介质厚度。请给 PCB 走线规则和可画的示意图。",
+      "expected_output": "保留手册指定的 90 Ω 差分目标，说明线宽和间距必须用实际叠层及板厂场求解器确认；检查参考平面、长度匹配、回流、过孔和连接器。不能假装已算出精确毫米值。",
+      "files": [],
+      "assertions": [
+        "Uses the interface-specific 90 ohm differential target",
+        "Does not invent precise trace width or gap without stackup",
+        "Covers reference plane and return path, pair coupling and transitions",
+        "Marks manufacturing impedance confirmation as pending"
+      ]
     }
   ]
 }

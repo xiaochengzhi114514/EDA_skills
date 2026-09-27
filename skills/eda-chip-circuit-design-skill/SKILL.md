@@ -1,14 +1,13 @@
 ---
 name: eda-chip-circuit-design-skill
 description: >-
-  为 EDA 芯片设计提供可追溯的器件资料核对、引脚功能说明、典型应用电路、目标电路设计、外围电阻电容电感选型、计算、BOM、网表和设计审查。只要用户给出芯片型号、数据手册、原理图或要求设计电源/模拟/接口电路，就使用本技能；支持 DC-DC Buck/Boost/Buck-Boost、LDO、电池充电、运放、接口转换器和其他带外部外围器件的 IC。优先查制造商原始资料，不确定时明确列出假设、缺口和需要用户确认的项目。
+  为 EDA 芯片设计提供可追溯的器件核对、电路与外围选型、PCB 布局示意、线宽/铺铜/过孔建议、阻抗判断和设计审查。当用户给出芯片型号、数据手册、原理图，或要求设计电源/模拟/接口电路及其 PCB 布局时使用；支持 DC-DC Buck/Boost/Buck-Boost、LDO、电池充电、运放、接口转换器和其他带外部外围器件的 IC。优先查制造商原始资料，不确定时明确列出假设、缺口和需要用户确认的项目。
 license: MIT
-compatibility: "Requires web access or a user-supplied datasheet for reliable pin and electrical limits; optional EasyEDA MCP can be used for schematic inspection or capture."
 metadata:
   author: Codex
-  version: 1.0.0
+  version: 1.1.0
   created: 2026-09-24
-  last_reviewed: 2026-09-24
+  last_reviewed: 2026-09-27
   review_interval_days: 90
 ---
 
@@ -23,6 +22,7 @@ metadata:
 - 用户要求从输入/输出电压、电流、纹波、启动时序、尺寸、效率或成本约束生成具体电路。
 - 用户提供 EDA 原理图、网表或截图，要求核查芯片连接。
 - 用户要求输出可供 EasyEDA/KiCad 录入的连接表、BOM 或网络表。
+- 用户要求 PCB 器件摆放示意、功率回路、走线宽度、铺铜/过孔、阻抗或布线审查。
 
 ## 交互入口
 
@@ -35,6 +35,7 @@ metadata:
 | `design` | 生成满足指标的目标电路 | 完整料号、Vin/Vout/Iout 或功能指标 |
 | `audit` | 审查已有原理图或连接表 | 芯片料号、原理图/网表、设计目标 |
 | `capture` | 生成 EDA 可录入的网表/操作计划 | 已确认的 `design` 结果；EasyEDA MCP 可选 |
+| `layout` | 生成 PCB 布局策略、关键回路图和布线审查 | 已确认的原理图/网表、叠层或明确的布局假设 |
 
 用户只给出型号而没有指标时，先完成 `identify` + `explain`，再列出设计所需的最少补充信息。不要用猜测的指标直接生成可投板电路。
 
@@ -112,7 +113,19 @@ Vout、Iout_cont、Iout_peak、负载瞬态和最小负载
 
 默认输出文本原理图和连接表；若用户提供 EDA 工具环境，可追加 KiCad/EasyEDA 可录入的网表或操作计划。没有用户确认前，不把未经核查的器件直接写入工程。
 
-### 7. 做电气、热和布局审查
+### 7. 生成 PCB 布局策略（`layout`）
+
+当用户要求 PCB 布局、走线、铺铜、过孔或阻抗建议时，读取 `references/pcb-layout.md`，并在原理图之后继续输出：
+
+- 器件相对位置和高 di/dt / 大电流 / 敏感模拟 / 高速差分网络分区；
+- 电源线起始线宽、铜厚、允许温升、压降和过孔数量的假设；
+- 地平面、回流路径、热铜和散热过孔策略；
+- 对真正需要的单端/差分接口给出阻抗目标来源；无叠层时标记“待 PCB 厂确认”，不要凭经验给精确线宽；
+- P0/P1/P2 的布局审查结果和未完成的 SI/PI、热、EMI、DRC 项目。
+
+对于 Buck，优先最小化 VIN-CIN-U1-D1 的输入回路和 PH-D1-L 的开关回路。不要把 PH 误当成需要 50 Ω 控制阻抗的信号线。
+
+### 8. 做电气、热和布局审查
 
 按输入、启动、稳态、轻载、满载、短路/限流、输入掉电、最大温度和负载阶跃逐项审查。至少回答：
 
@@ -151,6 +164,7 @@ Vout、Iout_cont、Iout_peak、负载瞬态和最小负载
 8. BOM：参考标号、器件类别、规格、首选件、替代件、额定值、备注。
 9. 设计审查：功能、额定值、热、稳定性、布局、EMI、测试项目。
 10. 未解决项、需要用户确认的决策和下一步验证计划。
+11. 用户要求 PCB 时，追加器件相对位置图、关键回路、线宽/铺铜/过孔假设和阻抗判断；依据 `references/pcb-layout.md`。
 
 每个“不确定”都要有原因和消除方法。对 P0（可能损坏、短路、超额定）/P1（功能或可靠性风险）/P2（优化建议）分级。
 
@@ -164,7 +178,7 @@ Vout、Iout_cont、Iout_peak、负载瞬态和最小负载
 
 ```text
 身份核对 → 引脚/封装核对 → 资料页码登记 → 公式和单位复算
-→ 额定值与裕量检查 → 稳定性/布局条件检查 → 输出未决项
+→ 额定值与裕量检查 → 稳定性/布局条件检查 → PCB 回路/回流/热/阻抗判定（如适用） → 输出未决项
 ```
 
 如果关键数据（例如 Vref、限流、推荐 LC、补偿、封装引脚）没有可靠来源，停止给出确定数值，改为请求数据手册或标记为“待确认”。
@@ -189,4 +203,5 @@ Vout、Iout_cont、Iout_peak、负载瞬态和最小负载
 - `references/topology-checks.md`：Buck/Boost/Buck-Boost/LDO/接口外围的公式与核查表。
 - `references/report-template.md`：固定交付模板、连接表和 BOM 字段。
 - `references/eda-integration.md`：EasyEDA/KiCad 协作和写入前后检查。
+- `references/pcb-layout.md`：PCB 分区、功率回路、线宽、铺铜、过孔和阻抗审查。
 - `scripts/power_calcs.py`：可重复的电源初算工具。

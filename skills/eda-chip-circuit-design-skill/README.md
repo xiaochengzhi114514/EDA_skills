@@ -1,6 +1,6 @@
 # EDA 芯片电路设计 skill
 
-输入芯片型号和设计目标，获取可追溯的引脚说明、原厂典型电路、目标连接表、外围器件初选、计算、BOM 与验证清单。
+输入芯片型号和设计目标，获取可追溯的引脚说明、原厂典型电路、目标连接表、外围器件初选、PCB 布局与布线策略、计算、BOM 和验证清单。
 
 ## 使用
 
@@ -12,7 +12,7 @@
 请给出引脚表、原厂典型电路、目标电路、L/C/R 选型、BOM 和 EasyEDA 连接表。
 ```
 
-只想查资料时写“只解释引脚和原厂典型电路”。已有图纸时附上原理图、BOM 或网表，并写“审查”。
+只想查资料时写“只解释引脚和原厂典型电路”。已有图纸时附上原理图、BOM 或网表，并写“审查”。需要 PCB 时可写“请给布局示意、功率回路、线宽/铺铜/过孔和阻抗审查”；若有层叠、铜厚和板厂工艺，也请一并提供。
 
 ## 安装到 Codex
 
@@ -31,7 +31,7 @@ Copy-Item -Recurse -Force . "$env:USERPROFILE\.agents\skills\eda-chip-circuit-de
 ## 文件
 
 - `SKILL.md`：触发条件和主流程。
-- `references/`：资料检索、拓扑核查、交付模板和 EDA 协作。
+- `references/`：资料检索、拓扑核查、PCB 布局/阻抗、交付模板和 EDA 协作。
 - `scripts/power_calcs.py`：Buck/Boost/反馈分压初算，无外部 Python 依赖。
 - `evals/evals.json`：源码目录中的回归场景；`.skill` 分发包按打包规范省略测试数据。
 
@@ -41,8 +41,3 @@ Copy-Item -Recurse -Force . "$env:USERPROFILE\.agents\skills\eda-chip-circuit-de
 python scripts/power_calcs.py buck --vin 12 --vout 3.3 --iout 2 --fs 2500000 --ripple-fraction 0.3 --output-ripple 0.03 --efficiency 0.9
 python scripts/power_calcs.py divider --vout 3.3 --vref 0.8 --rbot 100000 --min-current 0.000002
 ```
-
-## 许可证
-
-本项目采用 [MIT License](LICENSE)。
-
